@@ -36,4 +36,55 @@ router.post('/add-note', fetchuser, [
     }
 });
 
+
+// update notes
+router.put('/update-note/:id', fetchuser, async (req, res) => {
+    try {
+        const {title, description, tag} = req.body;
+    
+        const newNote = {};
+        if(title) newNote.title = title;
+        if(description) newNote.description = description;
+        if(tag)newNote.tag = tag;
+
+        // 🔥 Update the date whenever a note is modified
+        newNote.date = Date.now(); 
+    
+        let note = await Notes.findById(req.params.id);
+        if (!note) return res.status(404).json({error: "no notes found"});
+
+        // Check if the logged-in user owns this note
+        if(note.user.toString() !== req.user.id){
+            return res.status(401).json({error: "NOT ALLOWED!"});
+        }    
+
+        note = await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true});
+        res.json({note});
+    } catch (error) {
+        console.error(error.message); 
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+// update notes
+router.delete('/delete-note/:id', fetchuser, async (req, res) => {
+    try {
+
+        let note = await Notes.findById(req.params.id);
+        if (!note) return res.status(404).json({error: "no notes found"});
+
+        // Check if the logged-in user owns this note
+        if(note.user.toString() !== req.user.id){
+            return res.status(401).json({error: "NOT ALLOWED!"});
+        }    
+
+        await Notes.findByIdAndDelete(req.params.id);
+        res.json({ message: "Note deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting note:", error);  
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
 module.exports = router;
