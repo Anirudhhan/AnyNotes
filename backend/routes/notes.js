@@ -19,22 +19,23 @@ router.get('/fetchnotes', fetchuser, async (req, res) => {
 router.post('/add-note', fetchuser, [
     body('title').notEmpty().withMessage('Notes should contain a title'),
     body('description').notEmpty().withMessage('Notes should contain a description'),
-],async (req, res) => {
+], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        const {title, description, tag} = req.body;
+        const { title, description, tag } = req.body;
         const note = new Notes({ user: req.user.id, title, description, tag });
         await note.save();  // Explicitly saving instead of `Notes.create()`
          
-        res.status(201).json({message: "Notes Created!", note});
+        res.status(201).json(note); // ✅ Send only the note object
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 
 
 // update notes

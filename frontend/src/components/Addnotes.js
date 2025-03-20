@@ -1,11 +1,27 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import NoteContext from "../context/notes/NoteContext";
 
-export default function Addnotes() {
+export default function Addnotes({updatingNote, setShowAddNote}) {
   const context = useContext(NoteContext);
-  const {addNote} = context;
+  const {addNote, updateNote} = context;
 
   const [note, setNote] = useState({title: "", description: ""});
+
+  const handleSubmit = () => {
+    if (updatingNote === null) {
+      addNote(note.title, note.description); // Add new note
+    } else {
+      updateNote(note._id, note.title, note.description); 
+      setShowAddNote(!setShowAddNote);
+    }
+    setNote({ title: "", description: "" }); // Reset form fields after submission
+  };
+
+  useEffect(() => {
+    if (updatingNote !== null) {
+      setNote(updatingNote); // Populate the note state with updatingNote
+    }
+  }, [updatingNote]);
 
   return (
     <div className="d-flex justify-content-center align-items-center">
@@ -29,8 +45,8 @@ export default function Addnotes() {
             onChange={(e) => setNote({...note, [e.target.name]: e.target.value})}
             style={{ resize: "none", outline: "none", boxShadow: "none" }}
           />
-          <button type="button" className="btn btn-outline-primary w-100" onClick={()=>{ addNote(note.title, note.description); setNote({ title: "", description: "" });}}>
-            Add Note
+          <button type="button" className="btn btn-outline-primary w-100" onClick={handleSubmit}>
+          {(updatingNote === null) ? "Add Note" : "Update"}
           </button>
         </div>
       </div>
