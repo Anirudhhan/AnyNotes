@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NoteContext from "./NoteContext";
 
 export default function NoteState(props) {
-    const URL = "http://localhost:8000/api/notes/";
+    const URL = "http://localhost:8000/api/notes";
     
     // fetching notes
     const fetchNotes = async () => {
@@ -13,7 +13,7 @@ export default function NoteState(props) {
           headers: {
             "Content-Type": "application/json",
             "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdkNjdmNTJkYzM2YTE1YWFhMjViNDM4In0sImlhdCI6MTc0MjExMDU0Nn0.I-avBgqW2eC_cJhteluAsImIuX7p34v-EhyrJn0jaJs",
+              localStorage.getItem("token"),
           },
         });
   
@@ -22,8 +22,7 @@ export default function NoteState(props) {
         }
   
         const json = await response.json();
-        console.log(json)
-        setNotes(json);
+        setNotes(json)
       } catch (error) {
         console.error(error.message);
       }
@@ -40,7 +39,7 @@ export default function NoteState(props) {
           headers: {
             "Content-Type": "application/json",
             "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdkNjdmNTJkYzM2YTE1YWFhMjViNDM4In0sImlhdCI6MTc0MjExMDU0Nn0.I-avBgqW2eC_cJhteluAsImIuX7p34v-EhyrJn0jaJs",
+              localStorage.getItem("token"),
           },
           body: JSON.stringify({ title, description }),
         });
@@ -50,9 +49,8 @@ export default function NoteState(props) {
         }
     
         const newNote = await response.json();
-        console.log(newNote);
 
-        setNotes([...notes, newNote]);;
+        setNotes([...notes, newNote]);
     
       } catch (error) {
         alert("Failed to add note. Please try again.");
@@ -70,7 +68,7 @@ export default function NoteState(props) {
           headers: {
             "Content-Type": "application/json",
             "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdkNjdmNTJkYzM2YTE1YWFhMjViNDM4In0sImlhdCI6MTc0MjExMDU0Nn0.I-avBgqW2eC_cJhteluAsImIuX7p34v-EhyrJn0jaJs",
+              localStorage.getItem("token"),
           },
         });
     
@@ -96,7 +94,7 @@ export default function NoteState(props) {
           headers: {
             "Content-Type": "application/json",
             "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdkNjdmNTJkYzM2YTE1YWFhMjViNDM4In0sImlhdCI6MTc0MjExMDU0Nn0.I-avBgqW2eC_cJhteluAsImIuX7p34v-EhyrJn0jaJs",
+              localStorage.getItem("token"),
           },
           body: JSON.stringify({ title, description })
         });

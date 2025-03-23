@@ -1,11 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+  
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-secondary">
+      <nav className="navbar navbar-expand-lg bg-body-secondary" style={{height: "65px"}}>
         <div className="container-fluid">
           <button
             className="navbar-toggler"
@@ -33,18 +40,23 @@ export default function Navbar() {
                   About
                 </Link>
               </li>
-            </ul>
-            <form className="d-flex" role="search">
+              <li>
               <input
-                className="form-control me-2"
+                className="form-control mx-4 my-0"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                style={{width: "600px", height: "45px"}}
               />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
+              </li>
+            </ul>
+              {!localStorage.getItem("token")?
+              <button className="btn btn-outline-success mx-5" onClick={()=>navigate("/")}>
+                Login
+              </button> :
+              <a className="btn btn-outline-danger mx-5" onClick={handleLogout}>
+                logout
+              </a>}
           </div>
         </div>
       </nav>
