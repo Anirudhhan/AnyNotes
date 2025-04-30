@@ -1,67 +1,65 @@
-import React, {useState} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [success, setSuccess] = useState(""); 
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
-  
-    const handleClick = async (e) => {
-      e.preventDefault();
-      setError("");
+  const handleClick = async (e) => {
+    e.preventDefault();
+    setError("");
 
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-  
-      
-      const url = "https://anynotes-backend.onrender.com/api/auth/new-user";
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, email, password }),
-        });
-  
-        const json = await response.json();
-        if (!response.ok) {
-          if (response.status === 404) {
-            setError("API endpoint not found. Check server route.");
-            return;
-          }
-    
-          const errorMessage = json.errors?.length > 0 ? json.errors[0].msg : json.error;
-          setError(errorMessage); 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    const url = "https://anynotes-backend.onrender.com/api/auth/new-user";
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const json = await response.json();
+      if (!response.ok) {
+        if (response.status === 404) {
+          setError("API endpoint not found. Check server route.");
           return;
         }
-  
-        setSuccess(json.message || "Register Successful"); 
-        setError("");
 
-        setTimeout(() => {
-          navigate("/login"); 
-        }, 1000); 
-        console.log(json);
-      } catch (error) {
-        setError(error.message);
-        console.error(error.message);
+        const errorMessage =
+          json.errors?.length > 0 ? json.errors[0].msg : json.error;
+        setError(errorMessage);
+        return;
       }
-    };
+
+      setSuccess(json.message || "Register Successful");
+      setError("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } catch (error) {
+      setError(error.message);
+      console.error(error.message);
+    }
+  };
 
   return (
-    <div 
-      className="container  align-items-center" 
+    <div
+      className="container align-items-center"
       style={{ width: "25%", marginTop: "25px" }}
     >
-      {success && <div className="alert alert-success">{success}</div>} 
+      {success && <div className="alert alert-success">{success}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
       <div className="card p-4 shadow">
         <h3 className="text-center mb-4">Register</h3>
@@ -86,36 +84,76 @@ const Register = () => {
 
         <form onSubmit={handleClick}>
           <div className="mb-3">
-            <label htmlFor="registerName" className="form-label">Full Name</label>
-            <input type="text" id="registerName" className="form-control" value = {name} onChange={(e)=> setName(e.target.value)}/>
+            <label htmlFor="registerName" className="form-label">
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="registerName"
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="registerEmail" className="form-label">Email</label>
-            <input type="email" id="registerEmail" className="form-control" value = {email} onChange={(e)=> setEmail(e.target.value)}/>
+            <label htmlFor="registerEmail" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="registerEmail"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="registerPassword" className="form-label">Password</label>
-            <input type="password" id="registerPassword" className="form-control" value = {password} onChange={(e)=> setPassword(e.target.value)} />
+            <label htmlFor="registerPassword" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              id="registerPassword"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="registerRepeatPassword" className="form-label">Repeat Password</label>
-            <input type="password" id="registerRepeatPassword" className="form-control" value = {confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />
+            <label htmlFor="registerRepeatPassword" className="form-label">
+              Repeat Password
+            </label>
+            <input
+              type="password"
+              id="registerRepeatPassword"
+              className="form-control"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
 
           <div className="form-check d-flex justify-content-center mb-3">
-            <input className="form-check-input me-2" type="checkbox" id="registerCheck" />
+            <input
+              className="form-check-input me-2"
+              type="checkbox"
+              id="registerCheck"
+            />
             <label className="form-check-label" htmlFor="registerCheck">
               I agree to the terms and conditions
             </label>
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+          <button type="submit" className="btn btn-primary w-100">
+            Sign Up
+          </button>
 
           <div className="text-center mt-3">
-            <p>Already have an account? <a href="/login">Login</a></p>
+            <p>
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
           </div>
         </form>
       </div>
