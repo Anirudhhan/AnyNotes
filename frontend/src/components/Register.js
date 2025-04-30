@@ -97,7 +97,7 @@ const Register = () => {
       <div className="card p-4 shadow">
         <h3 className="text-center mb-4">Register</h3>
 
-        <div className="text-center mb-3">
+        {/* <div className="text-center mb-3">
           <p>Sign up with:</p>
           <button type="button" className="btn btn-link btn-floating mx-1" disabled={isLoading}>
             <i className="fab fa-facebook-f"></i>
@@ -113,7 +113,7 @@ const Register = () => {
           </button>
         </div>
 
-        <p className="text-center">or:</p>
+        <p className="text-center">or:</p> */}
 
         <form onSubmit={handleClick}>
           <div className="mb-3">
