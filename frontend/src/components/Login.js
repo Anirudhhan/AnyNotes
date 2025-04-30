@@ -156,7 +156,7 @@ export default function Login() {
               Not a member? <Link to="/register">Register</Link> 
             </p>
             <p>or sign up with:</p>
-            <div>
+            {/* <div>
               <button type="button" className="btn btn-link btn-floating mx-1">
                 <i className="fab fa-facebook-f"></i>
               </button>
@@ -169,7 +169,7 @@ export default function Login() {
               <button type="button" className="btn btn-link btn-floating mx-1">
                 <i className="fab fa-github"></i>
               </button>
-            </div>
+            </div> */}
           </div>
         </form>
       </div>
