@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // ✅ Import Link here
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function Login() {
@@ -14,7 +14,6 @@ export default function Login() {
     setError("");  
     setSuccess("");
     
-    // "http://localhost:8000/api/auth/login"
     const url = "https://anynotes-backend.onrender.com/api/auth/login";
     try {
       const response = await fetch(url, {
@@ -40,8 +39,8 @@ export default function Login() {
   
       localStorage.setItem("token", json.authToken);
       
-      setSuccess(json.message || "Login Successful"); // Show success in UI
-      setError(""); // Clear any previous errors
+      setSuccess(json.message || "Login Successful");
+      setError("");
   
       setTimeout(() => {
         navigate("/"); 
@@ -52,7 +51,6 @@ export default function Login() {
       console.error(error.message);
     }
   };
-  
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ marginTop: "90px" }}>
@@ -61,7 +59,6 @@ export default function Login() {
           <h3 className="text-center mb-4">Login</h3>
           {error && <div className="alert alert-danger">{error}</div>}
           {success && <div className="alert alert-success">{success}</div>} 
-
 
           <div className="form-outline mb-4">
             <input
@@ -121,7 +118,7 @@ export default function Login() {
 
           <div className="text-center">
             <p>
-              Not a member? <a href="register">Register</a>
+              Not a member? <Link to="/register">Register</Link> {/* ✅ Replaced <a> with <Link> */}
             </p>
             <p>or sign up with:</p>
             <div>
