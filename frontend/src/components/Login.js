@@ -1,21 +1,30 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // ✅ Import Link here
+import { useNavigate, Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); 
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = async (e) => {
     e.preventDefault();
-    setError("");  
-    setSuccess("");
+    
+    // Validate form
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    
+    setIsLoading(true);
     
     const url = "https://anynotes-backend.onrender.com/api/auth/login";
     try {
+      const toastId = toast.loading("Logging in...");
+      
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -24,41 +33,57 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
   
-      const json = await response.json(); 
+      const json = await response.json();
   
       if (!response.ok) {
         if (response.status === 404) {
-          setError("API endpoint not found. Check server route.");
+          toast.update(toastId, { 
+            render: "API endpoint not found. Check server route.", 
+            type: "error", 
+            isLoading: false,
+            autoClose: 5000
+          });
+          setIsLoading(false);
           return;
         }
   
         const errorMessage = json.errors?.length > 0 ? json.errors[0].msg : json.error || "Invalid credentials";
-        setError(errorMessage);
+        toast.update(toastId, { 
+          render: errorMessage, 
+          type: "error", 
+          isLoading: false,
+          autoClose: 5000
+        });
+        setIsLoading(false);
         return;
       }
   
       localStorage.setItem("token", json.authToken);
       
-      setSuccess(json.message || "Login Successful");
-      setError("");
+      toast.update(toastId, { 
+        render: json.message || "Login Successful", 
+        type: "success", 
+        isLoading: false,
+        autoClose: 2000
+      });
   
       setTimeout(() => {
-        navigate("/"); 
+        navigate("/");
         console.log(localStorage.getItem("token"));
-      }, 1000);
+      }, 2000);
     } catch (error) {
-      setError("Failed to login. Please try again.");
+      toast.error("Failed to login. Please try again.");
       console.error(error.message);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ marginTop: "90px" }}>
+      <ToastContainer position="top-right" />
       <div className="container" style={{ width: "25%" }}>
         <form className="p-4 border rounded shadow-sm bg-white">
           <h3 className="text-center mb-4">Login</h3>
-          {error && <div className="alert alert-danger">{error}</div>}
-          {success && <div className="alert alert-success">{success}</div>} 
 
           <div className="form-outline mb-4">
             <input
@@ -68,6 +93,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
             <label className="form-label" htmlFor="email">
               Email address
@@ -82,6 +108,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading}
             />
             <label className="form-label" htmlFor="password">
               Password
@@ -112,13 +139,21 @@ export default function Login() {
             onMouseEnter={(e) => (e.target.style.boxShadow = "0px 4px 10px rgba(0, 0, 0, 0.2)")}
             onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
             onClick={handleClick}
+            disabled={isLoading}
           >
-            Sign in
+            {isLoading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Signing in...
+              </>
+            ) : (
+              "Sign in"
+            )}
           </button>
 
           <div className="text-center">
             <p>
-              Not a member? <Link to="/register">Register</Link> {/* ✅ Replaced <a> with <Link> */}
+              Not a member? <Link to="/register">Register</Link> 
             </p>
             <p>or sign up with:</p>
             <div>
