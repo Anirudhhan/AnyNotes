@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NoteContext from "./NoteContext";
 
 export default function NoteState(props) {
-    const URL = "http://localhost:8000/api/notes";
+    const URL = "https://anynotes-backend.onrender.com/api/notes";
     
     // fetching notes
     const fetchNotes = async () => {

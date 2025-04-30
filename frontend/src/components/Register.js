@@ -20,7 +20,8 @@ const Register = () => {
         return;
       }
   
-      const url = "http://localhost:8000/api/auth/new-user";
+      
+      const url = "https://anynotes-backend.onrender.com/api/auth/new-user";
       try {
         const response = await fetch(url, {
           method: "POST",

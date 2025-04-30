@@ -13,8 +13,9 @@ export default function Login() {
     e.preventDefault();
     setError("");  
     setSuccess("");
-  
-    const url = "http://localhost:8000/api/auth/login";
+    
+    // "http://localhost:8000/api/auth/login"
+    const url = "https://anynotes-backend.onrender.com/api/auth/login";
     try {
       const response = await fetch(url, {
         method: "POST",
